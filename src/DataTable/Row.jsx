@@ -2,7 +2,6 @@ import React from 'react'
 
 const Row = (props) => {
   const row = props.children;
-  console.log(row);
 
   return (
     <tr>
