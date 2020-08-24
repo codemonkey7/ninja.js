@@ -9,7 +9,10 @@ const DataTable = (props) => {
   const [availableRows, setAvailableRows] = useState(rows);
 
   const calculateTotalNumberOfPages = () => {
-    if (rowsPerPage === 0) return 0
+    if (!rowsPerPage || rowsPerPage === 0) {
+      // If rowsPerPage is not defined or is 0, default to 5
+      return 5;
+    }
 
     return Math.ceil(availableRows.length / rowsPerPage)
   }
@@ -36,21 +39,18 @@ const DataTable = (props) => {
     setAvailableRows(rowsFound);
   }
 
-  const rowsInPageNumber = (pageNumber) => {
-    const startIndex = pageNumber * rowsPerPage
-    return [startIndex, startIndex + rowsPerPage]
+  const rowsToRender = () => {
+    let startIndex = currentPageNumber * rowsPerPage;
+    let rowsOnPage = availableRows.slice(startIndex, startIndex + rowsPerPage);
+    return rowsOnPage.map((row) => <Row key={row.per_id}>{row}</Row>)
   }
-
-  const rowsToRender = availableRows
-    .map(row => <Row key={row.per_id} row={row} />)
-    .slice(...rowsInPageNumber(currentPageNumber))
 
   return(
     <div>
       <Search onSearch={search} />
       <table>
         <tbody>
-          { rowsToRender }
+          { rowsToRender() }
         </tbody>
       </table>
       <Pagination
